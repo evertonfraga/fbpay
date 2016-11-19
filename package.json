@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "botkit": "^0.4.1",
-    "fb": "^1.1.1"
+    "fb": "^1.1.1",
+    "web3": "^0.17.0-beta"
   }
 }
