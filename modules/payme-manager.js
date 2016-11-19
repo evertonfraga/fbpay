@@ -15,8 +15,40 @@ class PayMeManager {
     bot.reply(message, 'TO DO: send ' + value + ' to ' + username);
   }
 
+  static timestampToDate(timestamp) {
+    var date = new Date(timestamp * 1000);
+    var minutes = "0" + date.getMinutes();
+    var formattedTime = date.getHours() + ':' + minutes.substr(-2) + ' - ';
+    formattedTime += date.getDay() + '/' + date.getMonth() + '/';
+    formattedTime += date.getFullYear();
+    return formattedTime;
+  }
+
   static history(bot, message) {
-    bot.reply(message, 'TO DO: show user history');
+    var balance = 0;
+    var items = [];
+    items.push({
+      'username': '@pedrogomesrocha',
+      'value': 100,
+      'timestamp': '1479582003'
+    });
+    items.push({
+      'username': '@everton',
+      'value': 253,
+      'timestamp': '1479562003'
+    });
+
+    var reply_text = 'Your history:\n';
+    items.forEach(function (item) {
+      balance += item.value;
+      reply_text += '> ' + item.username + ': ' + item.value;
+      reply_text += ' (' + PayMeManager.timestampToDate(item.timestamp) + ')';
+      reply_text += '\n';
+    });
+    reply_text += '\n';
+    reply_text += 'Balance: ' + balance;
+
+    bot.reply(message, reply_text);
   }
 
 }
