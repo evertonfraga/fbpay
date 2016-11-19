@@ -44,7 +44,7 @@ class ExampleManager {
     });
   }
 
-  static uptime(bot, message, process) {
+  static uptime(bot, message, os, process) {
     var hostname = os.hostname();
     var uptime = ExampleManager.formatUptime(process.uptime());
 
@@ -118,7 +118,7 @@ class ExampleManager {
     });
   }
 
-  static call_me(bot, message) {
+  static call_me(controller, bot, message) {
     var name = message.match[1];
     controller.storage.users.get(message.user, function (err, user) {
       if (!user) {
@@ -134,6 +134,7 @@ class ExampleManager {
   }
 
   static silent_push_reply(bot, message) {
+    var reply_message;
     reply_message = {
       text: "This message will have a push notification on a mobile phone, but no sound notification",
       notification_type: "SILENT_PUSH"
@@ -142,6 +143,7 @@ class ExampleManager {
   }
 
   static no_push(bot, message) {
+    var reply_message;
     reply_message = {
       text: "This message will not have any push notification on a mobile phone",
       notification_type: "NO_PUSH"
@@ -215,7 +217,7 @@ class ExampleManager {
     });
   }
 
-  static hello(bot, message) {
+  static hello(controller, bot, message) {
     controller.storage.users.get(message.user, function (err, user) {
       if (user && user.name) {
         bot.reply(message, 'Hello ' + user.name + '!!');
@@ -226,6 +228,7 @@ class ExampleManager {
   }
 
   static quick(bot, message) {
+
     bot.reply(message, {
       text: 'Hey! This message has some quick replies attached.',
       quick_replies: [

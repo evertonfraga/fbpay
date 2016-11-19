@@ -12,6 +12,8 @@ var Botkit = require('./node_modules/botkit/lib/Botkit.js');
 var os = require('os');
 var commandLineArgs = require('command-line-args');
 var localtunnel = require('localtunnel');
+var ExampleManager = require('./modules/example-manager');
+var PaymeManager = require('./modules/payme-manager');
 
 const ops = commandLineArgs([
   {
@@ -62,29 +64,23 @@ controller.setupWebserver(process.env.port || 3000, function (err, webserver) {
   });
 });
 
-controller.on('facebook_postback', ExampleManager.facebook_postback(bot, message));
+controller.hears(['help', 'hello'], 'message_received', function (bot, message) {
+  PaymeManager.help(bot, message);
+});
+
+controller.hears(['send (.*) to (.*)'], 'message_received', function (bot, message) {
+  PaymeManager.send(bot, message);
+});
+
+controller.hears(['history'], 'message_received', function (bot, message) {
+  PaymeManager.history(bot, message);
+});
+
+controller.on('facebook_postback', function (bot, message) {
+  ExampleManager.facebook_postback(bot, message);
+});
 
 controller.on('message_received', function (bot, message) {
-  bot.reply(message, 'Try: `what is my name` or `structured` or `call me captain`');
+  bot.reply(message, 'Try: `help` if you need');
   return false;
 });
-
-controller.hears(['quick'], 'message_received', ExampleManager.hello(bot, message));
-
-controller.hears(['hello', 'hi'], 'message_received', ExampleManager.hello(bot, message));
-
-controller.hears(['silent push reply'], 'message_received', ExampleManager.silent_push_reply(bot, message));
-
-controller.hears(['no push'], 'message_received', ExampleManager.no_push(bot, message));
-
-controller.hears(['structured'], 'message_received', ExampleManager.structured(bot, message));
-
-controller.hears(['call me (.*)', 'my name is (.*)'], 'message_received', ExampleManager.call_me(bot, message));
-
-controller.hears(['what is my name', 'who am i'], 'message_received', function (bot, message) {
-  ExampleManager.facebook_postback(controller, bot, message);
-});
-
-controller.hears(['shutdown'], 'message_received', ExampleManager.shutdown(bot, message));
-
-controller.hears(['uptime', 'identify yourself', 'who are you', 'what is your name'], 'message_received', ExampleManager.facebook_postback(bot, message, process));
